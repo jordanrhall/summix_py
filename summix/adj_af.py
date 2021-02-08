@@ -5,9 +5,9 @@
 ### Mixtures Research Group, Dr. Audrey E. Hendricks, Univ. of Colorado Denver, 2020.
 
 ### Import needed packages
-import HA_script
 import numpy as np
 import pandas as pd
+from summix.summix import data_processor
 
 ### adjAF: (ref, obs, pi_star, file_name, file_format, pi_hat) -> new_DF
 
@@ -100,7 +100,7 @@ def adjAF(ref, obs, pi_star, file_name, file_format, pi_hat=None):
 
     
     # Use the data_processor to take the info we need out of the data frame D
-    data_array = HA_script.data_processor(file_name, file_format, k-1, ref, obs)
+    data_array = data_processor(file_name, file_format, k-1, ref, obs)
     ref_AFs = data_array[0]
     observed_AFs = data_array[1]
         
