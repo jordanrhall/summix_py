@@ -1,0 +1,17 @@
+.ipynb_checkpoints/
+*.bbl
+*.blg
+*.aux
+*.fdb_latexmk
+*.lot
+*.lof
+*.fls
+*.gz
+*.gz(busy)
+*.log
+*.out
+*.toc
+*.swp
+*.swo
+.DS_Store
+__pycache__/
