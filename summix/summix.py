@@ -58,7 +58,7 @@ def data_processor(file_name, file_format, k, ref, obs):
     return A, taf
 
 
-### SUMMIX : (ref, k, x_guess, obs, file_name, file format) -> (x_answer, n_iterations, time)
+### SUMMIX : (ref, k, guess, obs, file_name, file format) -> (x_answer, n_iterations, time)
 
 ### A generalized function that takes 6 inputs: 
 
@@ -68,7 +68,7 @@ def data_processor(file_name, file_format, k, ref, obs):
 
  ## 2. k: The number of reference ancestries in the input data
 
- ## 3. x_guess: A starting guess, which should be a kx1 vector. Default is 1/k*(1,1,...,1).
+ ## 3. guess: A starting guess, which should be a kx1 vector. Default is 1/k*(1,1,...,1).
 
  ## 4. obs: is which column to use for observed allele freq's. Pass the name of this column, as a string.
  ## So for example, if the observed is stored in a column called "gnomAD_afr", then obs='gnomAD_afr'. 
@@ -88,7 +88,7 @@ def data_processor(file_name, file_format, k, ref, obs):
  
 ### SUMMIX will also return a print statement to help the user interpret their results.
 
-def SUMMIX(ref, obs, file_format='tab', k=None, x_guess=None, file_name=None):
+def SUMMIX(ref, obs, file_format='tab', k=None, guess=None, file_name=None):
 
     # Start the clock!
     start = timeit.default_timer()
@@ -121,18 +121,18 @@ def SUMMIX(ref, obs, file_format='tab', k=None, x_guess=None, file_name=None):
         print('Please ensure that k is a positive integer.')
         return
 
-    if x_guess is None:
-        x_guess=np.transpose(1/k*np.ones((k,1))) # If user doesn't give x_guess, we provide one.
+    if guess is None:
+        guess=np.transpose(1/k*np.ones((k,1))) # If user doesn't give guess, we provide one.
 
-    if abs(np.shape(x_guess)[0]-1)>0 and abs(np.shape(x_guess)[1]-1)>0:
-        print('Please ensure that initial iterate x_guess is a vector, size kx1 or 1xk.')
+    if abs(np.shape(guess)[0]-1)>0 and abs(np.shape(guess)[1]-1)>0:
+        print('Please ensure that initial iterate guess is a vector, size kx1 or 1xk.')
         return
 
-    if abs(np.shape(x_guess)[1]-k)>0:
-        x_guess=np.transpose(np.copy(x_guess))
+    if abs(np.shape(guess)[1]-k)>0:
+        guess=np.transpose(np.copy(guess))
 
-    if abs(np.shape(x_guess)[1]-k)>0:
-        print('Please ensure that initial iterate x_guess is a vector, size kx1 or 1xk.')
+    if abs(np.shape(guess)[1]-k)>0:
+        print('Please ensure that initial iterate guess is a vector, size kx1 or 1xk.')
 
     if isinstance(obs,str)==False:
         print('Please ensure that obs is a string, corresponding to the exact column name of the observed ancestry you wish to model.')
@@ -186,7 +186,7 @@ def SUMMIX(ref, obs, file_format='tab', k=None, x_guess=None, file_name=None):
         bnds = bnds + ((0, None),)
 
     # We now form an answer object which will store all of the outputs to running SLSQP given our inputs above
-    ans_obj = scipy.optimize.minimize(obj_fun, x_guess, method='SLSQP', jac=grad_obj_fun, bounds=bnds, constraints=cons, tol=1e-5)
+    ans_obj = scipy.optimize.minimize(obj_fun, guess, method='SLSQP', jac=grad_obj_fun, bounds=bnds, constraints=cons, tol=1e-5)
     
     # Stop the clock!
     stop = timeit.default_timer()
